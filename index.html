@@ -13,34 +13,45 @@
 }
 </style>
 <script type="text/javascript">
-function weeks() {
+
+const ABREAST = 130;
+
+const draw = (contxt, start_x, start_y, threshold, upTo) => {
+    for (let p = 0; p < upTo; p++) {
+        if( p > threshold){
+            contxt.fillStyle = 'rgb(122,181,225)';
+        }else{
+            contxt.fillStyle = 'rgb(2,85,125)';
+        }
+        contxt.beginPath();
+        contxt.arc((p%ABREAST)*10+start_x, (Math.floor(p/ABREAST))*10+start_y, 2, 0, Math.PI*2, false);
+        contxt.fill();
+    }
+}
+
+const tiktak = () => {
+    console.log('tik tok');
     var canvas = document.getElementById('canv');
     var ctx = canvas.getContext('2d');
 
     var birth = new Date("1993/01/05");
     var today = new Date();
-    var x = Math.floor( (today - birth) / (86400000 * 7) );
+    var current_w = Math.floor( (today - birth) / (86400000 * 7) );
 
-    for (let w = 0; w < 4500; w++) {
-        if( w > x){
-            ctx.fillStyle = 'rgb(122,181,225)';
-        }else{
-            ctx.fillStyle = 'rgb(2,85,125)';
-        }
-
-        ctx.beginPath();
-        ctx.arc((w%130)*10+10, (Math.floor(w/130))*10+10, 2, 0, Math.PI*2, false);
-        ctx.fill();
-    }
-    // document.getElementById("disp").textContent = x  + " / 4500";
+    draw(ctx, 10, 10, current_w, 4500);
+    draw(ctx, 10, 380, today.getDay(), 7);
+    draw(ctx, 10, 410, today.getHours(), 24);
+    draw(ctx, 10, 440, today.getMinutes(), 60);
+    draw(ctx, 10, 470, today.getSeconds(), 60);
 }
+
 </script>
 </head>
-<body onLoad="weeks()">
+<body onLoad="tiktak();setInterval(tiktak,1000);">
     <div id="content">
         <h1 style="font-size: 80px;">Weeks.</h1>
         <!-- <p id="disp"style="font-size: 20px;">///</p> -->
-        <canvas id="canv" width="1310" height="410"></canvas>
+        <canvas id="canv" width="1310" height="500"></canvas>
     </div>
 </body> 
 </html>
